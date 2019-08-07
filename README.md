@@ -1,3 +1,4 @@
+# 開發中
 [資料集來源](https://github.com/SophonPlus/ChineseNlpCorpus)
 - https://radimrehurek.com/gensim/models/doc2vec.html
 - https://www.itread01.com/content/1547303614.html
