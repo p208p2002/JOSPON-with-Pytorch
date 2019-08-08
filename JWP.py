@@ -40,33 +40,36 @@ class JWP(nn.Module):
         x = self.out(x)
         return x
 
-net = JWP(200,150,1)
-print(net)
+if __name__ == "__main__":
+    net = JWP(200,150,1)
+    print(net)
 
-optimizer = torch.optim.Adam(net.parameters(), lr=0.0002)
-loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
+    optimizer = torch.optim.Adam(net.parameters(), lr=0.0002)
+    loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
 
 
-#
-running_loss = 0.0
-running_acc = 0.0
-for t in range(150):
-    # out = net(postiveComments)
-    out = net(trainData)
-    # print(F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5000]),trainDataAns[5000])
-    loss = loss_func(out,trainDataAns)
-    loss.backward()
-    optimizer.step()
-    
-    # loss_batch = loss.item()
-    # running_loss += (loss_batch - running_loss) / (t+1)
-    print(loss.data,F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5500]),trainDataAns[5500])
-    # print('loss',)
+    #
+    running_loss = 0.0
+    running_acc = 0.0
+    for t in range(150):
+        # out = net(postiveComments)
+        out = net(trainData)
+        # print(F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5000]),trainDataAns[5000])
+        loss = loss_func(out,trainDataAns)
+        loss.backward()
+        optimizer.step()
+        
+        # loss_batch = loss.item()
+        # running_loss += (loss_batch - running_loss) / (t+1)
+        print(loss.data,F.sigmoid(out[t]),trainDataAns[t],F.sigmoid(out[t+3000]),trainDataAns[t+3000])
+        # print('loss',)
 
-    if(loss.data.numpy() <= 0.0001):
-        break
-    
-    # if t % 2 == 0:
-        # plot and show learning process
-    
+        if(loss.data.numpy() <= 0.0001):
+            break
+        
+        # if t % 2 == 0:
+            # plot and show learning process
 
+
+    torch.save(net, 'pytorch.model')
+    print('model save')
