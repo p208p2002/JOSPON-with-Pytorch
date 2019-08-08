@@ -24,19 +24,19 @@ tagged_data = [TaggedDocument(sentence, [str(i)]) for i, sentence in enumerate(s
 
 # train
 max_epochs = 50
-vec_size = 100
-alpha = 0.025
+vec_size = 200
+alpha = 0.03
 
 model = Doc2Vec(vector_size=vec_size, alpha=alpha, min_alpha=0.00025,min_count=1, dm =1)
 model.build_vocab(tagged_data)
 
 for epoch in range(max_epochs):
-    print('iteration {0}'.format(epoch))
+    print('iteration {0}'.format(epoch),model.alpha)
     model.train(tagged_data,
                 total_examples=model.corpus_count,
                 epochs=model.epochs)
     # decrease the learning rate
-    model.alpha -= 0.0002
+    model.alpha -= 0.0003
     # fix the learning rate, no decay
     model.min_alpha = model.alpha
 
