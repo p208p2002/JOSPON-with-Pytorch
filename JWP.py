@@ -50,12 +50,11 @@ for t in range(100):
     # out = net(postiveComments)
     out = net(trainData)
     # print('out',out)
-    
     loss = loss_func(out,trainDataAns)
     loss.backward()
     optimizer.step()
-    print('loss',loss.data.numpy())
-    if(loss.data.numpy() <= 0.00015):
+    print('loss',loss.data)
+    if(loss.data.numpy() <= 0.0001):
         break
     
     # if t % 2 == 0:
