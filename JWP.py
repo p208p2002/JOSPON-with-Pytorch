@@ -50,7 +50,7 @@ loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotte
 #
 running_loss = 0.0
 running_acc = 0.0
-for t in range(250):
+for t in range(150):
     # out = net(postiveComments)
     out = net(trainData)
     # print(F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5000]),trainDataAns[5000])
@@ -58,9 +58,9 @@ for t in range(250):
     loss.backward()
     optimizer.step()
     
-    loss_batch = loss.item()
-    running_loss += (loss_batch - running_loss) / (t+1)
-    print(loss.data,F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5000]),trainDataAns[5000])
+    # loss_batch = loss.item()
+    # running_loss += (loss_batch - running_loss) / (t+1)
+    print(loss.data,F.sigmoid(out[0]),trainDataAns[0],F.sigmoid(out[5500]),trainDataAns[5500])
     # print('loss',)
 
     if(loss.data.numpy() <= 0.0001):
