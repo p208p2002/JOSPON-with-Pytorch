@@ -51,24 +51,26 @@ testData = torch.cat((t_postiveComments,t_negativeComments))
 testDataAns = torch.cat((t_postiveAns,t_negativeAns))
 
 class JWP(nn.Module):
-    def __init__(self, n_feature, n_hidden, n_output):
+    def __init__(self, n_feature, n_hidden,n_hidden2, n_output):
         super(JWP, self).__init__()
         self.hidden = nn.Linear(n_feature, n_hidden)
-        self.out = nn.Linear(n_hidden, n_output)
+        self.hidden2 = nn.Linear(n_hidden, n_hidden2)
+        self.out = nn.Linear(n_hidden2, n_output)
         
     def forward(self, x):
         x = F.relu(self.hidden(x).squeeze())
+        x = F.relu(self.hidden2(x).squeeze())
         x = F.sigmoid(self.out(x))
 
         return x
 
-lr = 0.003
+lr = 0.004
 min_lr = 0.0005
 def adjust_learning_rate(optimizer, epoch):
     global lr
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     if epoch % 5 == 0 and epoch != 0:
-        lr = lr * 0.95
+        lr = lr * 0.90
         if(lr < min_lr):
             lr = min_lr
         for param_group in optimizer.param_groups:
@@ -76,13 +78,13 @@ def adjust_learning_rate(optimizer, epoch):
     
 
 if __name__ == "__main__":
-    net = JWP(200,100,1)    
+    net = JWP(200,150,100,1) 
     print(net)
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
 
-    for t in range(20):
+    for t in range(30):
         # 打亂資料
         torch.manual_seed(t)
         trainData=trainData[torch.randperm(trainData.size()[0])]
