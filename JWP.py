@@ -80,6 +80,11 @@ if __name__ == "__main__":
     loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
 
     for t in range(100):
+        # 打亂資料
+        torch.manual_seed(t)
+        trainData=trainData[torch.randperm(trainData.size()[0])]
+        torch.manual_seed(t)
+        trainDataAns=trainDataAns[torch.randperm(trainDataAns.size()[0])]
         # train
         net.train()
         out = net(trainData)

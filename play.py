@@ -1,9 +1,9 @@
 import torch
 import torch.nn.functional as F
 
-target = torch.ones([10, 64], dtype=torch.float32)
-output = torch.full([10, 64], 0.9) 
-pos_weight = torch.ones([64])
-criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-loss = criterion(output, target)
-print(loss)
+
+t=torch.tensor([[1,2],[3,4],[5,6]])
+print(t)
+r=t[torch.randperm(t.size()[0])]
+r=t[torch.randperm(t.size()[0])]
+print(r)
