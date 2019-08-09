@@ -62,18 +62,18 @@ class JWP(nn.Module):
 
         return x
 
-lr = 0.0018
+lr = 0.0015
 def adjust_learning_rate(optimizer, epoch):
     global lr
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    if epoch % 10 == 0 and epoch != 0:
+    if epoch % 15 == 0 and epoch != 0:
         lr = lr - 0.0001
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
     
 
 if __name__ == "__main__":
-    net = JWP(200,150,1)    
+    net = JWP(200,100,1)    
     print(net)
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
