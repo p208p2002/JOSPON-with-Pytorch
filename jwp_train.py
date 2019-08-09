@@ -62,12 +62,15 @@ class JWP(nn.Module):
 
         return x
 
-lr = 0.0015
+lr = 0.003
+min_lr = 0.0005
 def adjust_learning_rate(optimizer, epoch):
     global lr
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    if epoch % 15 == 0 and epoch != 0:
-        lr = lr - 0.0001
+    if epoch % 5 == 0 and epoch != 0:
+        lr = lr * 0.95
+        if(lr < min_lr):
+            lr = min_lr
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
     
@@ -79,7 +82,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
 
-    for t in range(100):
+    for t in range(20):
         # 打亂資料
         torch.manual_seed(t)
         trainData=trainData[torch.randperm(trainData.size()[0])]
@@ -107,7 +110,8 @@ if __name__ == "__main__":
             "R:",t ,
             "loss:",round(loss.item(),3),
             "train_acc:",round(np.mean(outAsAns == trainDataAns.numpy()),3),
-            "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3)
+            "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3),
+            "LR:",lr
         )
 
     torch.save(net, 'pytorch.model')

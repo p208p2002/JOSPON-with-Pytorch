@@ -1,5 +1,5 @@
 import torch
-from JWP import JWP
+from jwp_train import JWP
 from gensim.models.doc2vec import Doc2Vec
 import jieba
 import torch.nn.functional as F
