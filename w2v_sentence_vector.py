@@ -32,7 +32,7 @@ class W2VS():
                 vec = self.model.wv.__getitem__(i)
                 vecSum = np.add(vecSum, vec)
             except Exception as e:
-                print(e)
+                # print(e)
                 lenOfCut -= 1
                 continue
         divisor = np.array([lenOfCut]*200)
