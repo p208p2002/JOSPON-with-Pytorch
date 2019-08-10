@@ -18,7 +18,7 @@ if __name__ == "__main__":
             line = row[1].strip('\n')
             sVec = w2vs.getSenVec(line)
             # sentencesDict.append(sVec)
-            sentencesDict[str(i)] = (sVec,row[1])
+            sentencesDict[str(i-1)] = (sVec,row[0])
     with open('dataset/waimai_10k_tw.pkl','wb') as f:
         pickle.dump(sentencesDict,f)
     print("finish")

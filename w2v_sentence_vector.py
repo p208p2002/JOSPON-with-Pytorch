@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-
 """
 使用預訓練的w2v模型取得句子向量
 default size : 200
@@ -35,6 +34,8 @@ class W2VS():
                 # print(e)
                 lenOfCut -= 1
                 continue
+        if(lenOfCut == 0 ):
+            return np.array([0]*200)
         divisor = np.array([lenOfCut]*200)
         return np.divide(vecSum, divisor)
         
