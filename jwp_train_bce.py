@@ -77,7 +77,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     loss_func = torch.nn.BCEWithLogitsLoss()
 
-    for t in range(200):
+    for t in range(50):
         adjust_learning_rate(optimizer,t)
 
         """
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         Result
         """
         print(
-            "epoch:",t ,
+            "epoch:",t+1 ,
             "loss:",round(loss.item(),3),
             "train_acc:",round(np.mean(outAsAns == trainDataAns.numpy()),3),
             "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3),
