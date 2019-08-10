@@ -6,6 +6,10 @@ import torch.nn.functional as F
 import torch
 import numpy as np
 
+modelSelect = int(input("[1]:BCE MODEL, [2]:CE MODEL\n"))
+
+print("init...")
+
 # jieba初始化
 jieba.set_dictionary('dict/dict.txt.big')
 jieba.load_userdict('dict/my_dict')
@@ -15,7 +19,10 @@ jieba.initialize()
 model= Doc2Vec.load("d2vmodel/d2vmodel.model")
 
 # load pytorch
-net = torch.load('torchmodel/pytorch_bce.model')
+if(modelSelect == 1):
+    net = torch.load('torchmodel/pytorch_bce.model')
+elif(modelSelect == 2):
+    net = torch.load('torchmodel/pytorch_ce.model')
 net.eval()
 
 # test_data
@@ -27,8 +34,10 @@ while True:
         v1 = v1 + torch.tensor(model.infer_vector(test_data))
     v1 = v1 / 50
     res = net(torch.tensor(v1))
-    res = res.detach().numpy()[0]
-    print(res)
+    out = res
+    res = res.clone().detach().numpy()[0]
+    print(out)
+
     if(res>0.5):
         print("正面")
     else:

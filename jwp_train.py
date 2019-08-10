@@ -85,6 +85,7 @@ if __name__ == "__main__":
     loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
 
     for t in range(30):
+        adjust_learning_rate(optimizer,t)
         # 打亂資料
         torch.manual_seed(t)
         trainData=trainData[torch.randperm(trainData.size()[0])]
@@ -99,7 +100,6 @@ if __name__ == "__main__":
         loss = loss_func(out,trainDataAns)
         optimizer.zero_grad()
         loss.backward()
-        adjust_learning_rate(optimizer,t)
         optimizer.step()
 
         # eval

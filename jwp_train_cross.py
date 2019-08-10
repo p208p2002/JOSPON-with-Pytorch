@@ -69,11 +69,11 @@ class JWP(nn.Module):
     def forward(self, x):
         x = F.relu(self.hidden(x).squeeze())
         x = F.relu(self.hidden2(x).squeeze())
-        x = F.sigmoid(self.out(x))
+        x = F.softmax(self.out(x))
 
         return x
 
-lr = 0.004
+lr = 0.002
 min_lr = 0.0005
 def adjust_learning_rate(optimizer, epoch):
     global lr
@@ -96,8 +96,8 @@ if __name__ == "__main__":
     num_samples = 0
     t_num_correct = 0
     t_num_samples = 0
-    for t in range(30):
-
+    for t in range(25):
+        adjust_learning_rate(optimizer,t)
         # train
         net.train()
         out = net(trainData)
@@ -110,7 +110,6 @@ if __name__ == "__main__":
         loss = loss_func(out,trainDataAns)
         optimizer.zero_grad()
         loss.backward()
-        adjust_learning_rate(optimizer,t)
         optimizer.step()
 
         # eval
