@@ -1,3 +1,7 @@
+"""
+評價句子正反面情緒
+"""
+
 import torch
 from JWP import JWP
 from gensim.models.doc2vec import Doc2Vec
