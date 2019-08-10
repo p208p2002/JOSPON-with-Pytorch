@@ -1,7 +1,6 @@
 import torch
 from JWP import JWP
 from gensim.models.doc2vec import Doc2Vec
-import jieba
 import torch.nn.functional as F
 import torch
 import numpy as np
@@ -9,8 +8,7 @@ from w2v_sentence_vector import W2VS
 
 print("init...")
 w2vs = W2VS()
-modelSelect = int(input("[1]:BCE MODEL, [2]:CE MODEL\n"))
-
+net = torch.load('torchmodel/pytorch_bce.model')
 # test_data
 while True:
     ts = input("輸入評價:")
