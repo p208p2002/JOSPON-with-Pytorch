@@ -109,7 +109,6 @@ if __name__ == "__main__":
         t_outAsAns = out.clone().detach().numpy()
         t_outAsAns = np.where([t_outAsAns > 0.5],1.0,0.0)
         
-
         """
         Result
         """
