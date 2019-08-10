@@ -15,7 +15,7 @@ jieba.initialize()
 model= Doc2Vec.load("d2vmodel/d2vmodel.model")
 
 # load pytorch
-net = torch.load('pytorch.model')
+net = torch.load('torchmodel/pytorch_bce.model')
 net.eval()
 
 # test_data

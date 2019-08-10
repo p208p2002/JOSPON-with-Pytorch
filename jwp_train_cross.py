@@ -11,11 +11,15 @@ d2vModel = Doc2Vec.load('d2vmodel/d2vmodel.model')
 # train data 3k
 POSTIVE_COMMENT_STRAT = 0
 NEGATIVE_COMMENT_START = 4000
-postiveAns = torch.ones([3000,1],dtype=torch.float)
-negativeAns = torch.zeros([3000,1],dtype=torch.float)
+
+postiveAns = torch.tensor(0)
+postiveAns = postiveAns.repeat(3000)
+
+negativeAns = torch.tensor(1)
+negativeAns = negativeAns.repeat(3000)
+
 postiveComments = []
 negativeComments = []
-
 for i in range(POSTIVE_COMMENT_STRAT, POSTIVE_COMMENT_STRAT + 3000):
     tmp = d2vModel.docvecs[str(i)]
     postiveComments.append(tmp)
@@ -32,8 +36,13 @@ trainDataAns = torch.cat((postiveAns,negativeAns))
 # test data 1k
 T_POSTIVE_COMMENT_STRAT = 3000
 T_NEGATIVE_COMMENT_START = 7000
-t_postiveAns = torch.ones([1000,1],dtype=torch.float)
-t_negativeAns = torch.zeros([1000,1],dtype=torch.float)
+
+t_postiveAns = torch.tensor(0)
+t_postiveAns = t_postiveAns.repeat(1000)
+
+t_negativeAns = torch.tensor(1)
+t_negativeAns = t_negativeAns.repeat(1000)
+
 t_postiveComments = []
 t_negativeComments = []
 
@@ -78,24 +87,26 @@ def adjust_learning_rate(optimizer, epoch):
     
 
 if __name__ == "__main__":
-    net = JWP(200,150,100,1) 
+    net = JWP(200,150,100,2) 
     print(net)
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
-    loss_func = torch.nn.BCEWithLogitsLoss()  # the target label is NOT an one-hotted
-
+    loss_func = torch.nn.CrossEntropyLoss()  # the target label is NOT an one-hotted
+    num_correct = 0
+    num_samples = 0
+    t_num_correct = 0
+    t_num_samples = 0
     for t in range(30):
-        # 打亂資料
-        torch.manual_seed(t)
-        trainData=trainData[torch.randperm(trainData.size()[0])]
-        torch.manual_seed(t)
-        trainDataAns=trainDataAns[torch.randperm(trainDataAns.size()[0])]
+
         # train
         net.train()
         out = net(trainData)
-        outAsAns = out.clone().detach().numpy()
-        outAsAns = np.where([outAsAns > 0.5],1.0,0.0)
-        
+
+        _, preds = out.data.cpu().max(1)
+        num_correct += (preds == trainDataAns).sum()
+        num_samples += preds.size(0)
+        acc = float(num_correct) / num_samples
+
         loss = loss_func(out,trainDataAns)
         optimizer.zero_grad()
         loss.backward()
@@ -104,17 +115,20 @@ if __name__ == "__main__":
 
         # eval
         net.eval()
-        out = net(testData)
-        t_outAsAns = out.clone().detach().numpy()
-        t_outAsAns = np.where([t_outAsAns > 0.5],1.0,0.0)
+        t_out = net(testData)
+
+        _, t_preds = t_out.data.cpu().max(1)
+        t_num_correct += (t_preds == testDataAns).sum()
+        t_num_samples += t_preds.size(0)
+        t_acc = float(t_num_correct) / t_num_samples
         
         print(
             "R:",t ,
             "loss:",round(loss.item(),3),
-            "train_acc:",round(np.mean(outAsAns == trainDataAns.numpy()),3),
-            "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3),
+            "train_acc:",round(acc,3),
+            "test_acc:",round(t_acc,3),
             "LR:",lr
         )
 
-    torch.save(net, 'torchmodel/pytorch_bce.model')
+    torch.save(net, 'torchmodel/pytorch_ce.model')
     print('model save')
