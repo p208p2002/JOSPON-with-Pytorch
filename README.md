@@ -15,10 +15,22 @@ Judge of sentence positive or negative with PyTorch
 (out): Linear(in_features=100, out_features=1, bias=True)
 ```
 
+# 檔案說明
+| 名稱             | 說明                                   |
+|------------------|----------------------------------------|
+| demo.py          | 模型示範                               |
+| jwp_train_bce.py | 模型訓練                               |
+| JWP.py           | 神經網路定義類                         |
+| make_w2v_set.py  | 製作訓練所需的檔案(資料集文字轉換向量) |
+| w2v_seg.py       | 製作w2v訓練資料(斷詞)                  |
+| w2v_train.py     | 訓練w2v模型                            |
+| w2v_test.py      | 測試文字在w2v模型的向量                |
+| W2V_SV.py        | 轉換句到句向量類                       |
+
 # 方法
 - 取得句子向量
     - 使用預訓練word2vec模型搭配jieba斷詞，將所有單詞向量相加平均
-    - 使用檔案:`w2v_train.py`、`w2v_sentence_vector.py`
+    - 使用檔案:`w2v_train.py`、`W2V_SV.py`
 
 - 將資料集中句子全部轉換成向量
     - 使用檔案:`make_w2v_set.py`
@@ -29,7 +41,12 @@ Judge of sentence positive or negative with PyTorch
 # 結果
 ## 訓練結果
 ```
-epoch: 50 loss: 0.592 train_acc: 0.798 test_acc: 0.754 LR: 0.004
+.
+.
+.
+epoch: 298 loss: 0.556 train_acc: 0.879 test_acc: 0.827 LR: 0.007748409780000004
+epoch: 299 loss: 0.556 train_acc: 0.879 test_acc: 0.827 LR: 0.007748409780000004
+epoch: 300 loss: 0.556 train_acc: 0.879 test_acc: 0.828 LR: 0.007748409780000004
 ```
 ## 測試結果
 ```

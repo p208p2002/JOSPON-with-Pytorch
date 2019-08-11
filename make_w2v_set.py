@@ -3,7 +3,7 @@
 轉換資料集到句子向量
 save as pickle
 """
-from w2v_sentence_vector import W2VS
+from W2V_SV import W2VS
 import pickle
 import csv
 
