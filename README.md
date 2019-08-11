@@ -66,3 +66,13 @@ epoch: 300 loss: 0.556 train_acc: 0.879 test_acc: 0.828 LR: 0.007748409780000004
 0.389
 反面
 ```
+# 使用
+1. 先處理wiki data，準備製作w2v模型
+> `w2v_seg.py`
+2. 使用處理好的wiki data訓練w2v模型
+> `w2v_train.py`
+3. 取的waimai資料集句向量
+> `make_w2v_set.py`
+4. 訓練神經網路
+>  `jwp_train_bce.py`
+5. 使用`demo.py`測試
