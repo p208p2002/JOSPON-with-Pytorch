@@ -27,16 +27,17 @@ Judge of sentence positive or negative with PyTorch
 | w2v_test.py      | 測試文字在w2v模型的向量                |
 | W2V_SV.py        | 轉換句到句向量類                       |
 
-# 方法
-- 取得句子向量
-    - 使用預訓練word2vec模型搭配jieba斷詞，將所有單詞向量相加平均
-    - 使用檔案:`w2v_train.py`、`W2V_SV.py`
-
-- 將資料集中句子全部轉換成向量
+# 建置流程
+1. 先處理wiki data，準備製作w2v模型
+    - 使用檔案:`w2v_seg.py`
+2. 使用處理好的wiki data訓練w2v模型
+    - 使用檔案:`w2v_train.py`
+3. 取得waimai資料集句向量
     - 使用檔案:`make_w2v_set.py`
-
-- 訓練神經網路模型
-    - 使用檔案:`jwp_train_bce.py`
+4. 訓練神經網路
+    -  使用檔案:`jwp_train_bce.py`
+5. 測試
+    - 使用檔案:`demo.py`
 
 # 結果
 ## 訓練結果
@@ -66,13 +67,3 @@ epoch: 300 loss: 0.556 train_acc: 0.879 test_acc: 0.828 LR: 0.007748409780000004
 0.389
 反面
 ```
-# 使用
-1. 先處理wiki data，準備製作w2v模型
-> `w2v_seg.py`
-2. 使用處理好的wiki data訓練w2v模型
-> `w2v_train.py`
-3. 取的waimai資料集句向量
-> `make_w2v_set.py`
-4. 訓練神經網路
->  `jwp_train_bce.py`
-5. 使用`demo.py`測試
