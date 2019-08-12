@@ -3,6 +3,7 @@
 PyTorch類神經網路模型
 """
 
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -18,7 +19,7 @@ class JWP(nn.Module):
         x = F.relu(self.hidden2(x).squeeze())
         # 
         if(apply_sigmoid):
-            x = F.sigmoid(self.out(x))
+            x = torch.sigmoid(self.out(x))
         else:
             x = self.out(x)
 
