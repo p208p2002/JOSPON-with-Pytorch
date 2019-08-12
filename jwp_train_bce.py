@@ -55,8 +55,8 @@ t_negativeComments = torch.FloatTensor(t_negativeComments)
 testData = torch.cat((t_postiveComments,t_negativeComments))
 testDataAns = torch.cat((t_postiveAns,t_negativeAns))
 
-lr = 0.02
-min_lr = 0.0005
+lr = 0.05
+min_lr = 0.001
 def adjust_learning_rate(optimizer, epoch):
     """
     調整學習率
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     loss_func = torch.nn.BCEWithLogitsLoss()
 
-    for t in range(300):
+    for t in range(500):
         adjust_learning_rate(optimizer,t)
 
         """
@@ -92,12 +92,11 @@ if __name__ == "__main__":
         Train phase
         """
         net.train()
+        optimizer.zero_grad()
         out = net(trainData)
         outAsAns = out.clone().detach().numpy()
         outAsAns = np.where([outAsAns > 0.5],1.0,0.0)
-        
-        loss = loss_func(out,trainDataAns)
-        optimizer.zero_grad()
+        loss = loss_func(out,trainDataAns)        
         loss.backward()
         optimizer.step()
 

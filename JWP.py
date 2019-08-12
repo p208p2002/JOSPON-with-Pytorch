@@ -13,9 +13,13 @@ class JWP(nn.Module):
         self.hidden2 = nn.Linear(n_hidden, n_hidden2)
         self.out = nn.Linear(n_hidden2, n_output)
         
-    def forward(self, x):
+    def forward(self, x, apply_sigmoid=False):
         x = F.relu(self.hidden(x).squeeze())
         x = F.relu(self.hidden2(x).squeeze())
-        x = F.sigmoid(self.out(x))
+        # 
+        if(apply_sigmoid):
+            x = F.sigmoid(self.out(x))
+        else:
+            x = self.out(x)
 
         return x

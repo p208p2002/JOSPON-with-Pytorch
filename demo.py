@@ -13,11 +13,12 @@ from W2V_SV import W2VS
 print("init...")
 w2vs = W2VS()
 net = torch.load('torchmodel/pytorch_bce.model')
+net.eval()
 # test_data
 while True:
     ts = input("輸入評價:")
     v1 = w2vs.getSenVec(ts)
-    res = net(torch.FloatTensor(v1))
+    res = net(torch.FloatTensor(v1), apply_sigmoid = True)
     out = res
     res = res.clone().detach().numpy()[0]
     print(round(res,3))
