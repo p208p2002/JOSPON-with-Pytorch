@@ -55,7 +55,7 @@ t_negativeComments = torch.FloatTensor(t_negativeComments)
 testData = torch.cat((t_postiveComments,t_negativeComments))
 testDataAns = torch.cat((t_postiveAns,t_negativeAns))
 
-lr = 0.04
+lr = 0.03
 min_lr = 0.001
 def adjust_learning_rate(optimizer, epoch):
     """

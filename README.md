@@ -8,7 +8,6 @@ Judge of sentence positive or negative with PyTorch
 # 模型定義
 - 包含兩個隱藏層
 - hidden、hidden2 使用 `relu`
-- out 使用 `sigmoid`
 ```
 (hidden): Linear(in_features=200, out_features=150, bias=True)
 (hidden2): Linear(in_features=150, out_features=100, bias=True)
