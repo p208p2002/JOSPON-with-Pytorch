@@ -39,7 +39,7 @@ Judge of sentence positive or negative with PyTorch
 5. 測試
     - 使用檔案:`demo.py`
 
-> [維基資料集與預訓練模型下載](https://github.com/p208p2002/JOSPON-with-Pytorch/releases)
+> [維基資料集與預訓練模型下載](https://github.com/p208p2002/JOSPON-with-Pytorch/releases)，包含訓練好的w2v模型，可跳過1、2步驟
 # 結果
 ## 訓練結果
 ```
