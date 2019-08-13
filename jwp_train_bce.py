@@ -68,6 +68,12 @@ def adjust_learning_rate(optimizer, epoch):
             lr = min_lr
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
+
+def compute_accuracy(y_pred, y_target):
+    y_target = y_target.cpu()
+    y_pred_indices = (torch.sigmoid(y_pred)>0.5).cpu().long()#.max(dim=1)[1]
+    n_correct = torch.eq(y_pred_indices, y_target).sum().item()
+    return n_correct / len(y_pred_indices) * 100
     
 
 if __name__ == "__main__":
@@ -97,8 +103,7 @@ if __name__ == "__main__":
         net.train()
         optimizer.zero_grad()
         out = net(trainData)
-        outAsAns = out.clone().detach().numpy()
-        outAsAns = np.where([outAsAns > 0.5],1.0,0.0)
+        trainAcc = compute_accuracy(out,trainDataAns.long())
         loss = loss_func(out,trainDataAns)        
         loss.backward()
         optimizer.step()
@@ -107,10 +112,9 @@ if __name__ == "__main__":
         Eval phase
         """
         net.eval()
-        out = net(testData)        
-        t_outAsAns = out.clone().detach().numpy()
-        t_outAsAns = np.where([t_outAsAns > 0.5],1.0,0.0)
-        t_loss = loss_func(out,testDataAns)
+        t_out = net(testData)
+        testAcc = compute_accuracy(t_out,testDataAns.long())
+        t_loss = loss_func(t_out,testDataAns)
         
         """
         Result
@@ -118,9 +122,9 @@ if __name__ == "__main__":
         print(
             "epoch:",t+1 ,
             "train_loss:",round(loss.item(),3),
-            "train_acc:",round(np.mean(outAsAns == trainDataAns.numpy()),3),
+            "train_acc:",round(trainAcc,3),
             "test_loss:",round(t_loss.item(),3),
-            "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3),
+            "test_acc:",round(testAcc,3),
             "LR:",lr
         )
 
