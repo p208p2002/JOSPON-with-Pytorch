@@ -55,15 +55,15 @@ t_negativeComments = torch.FloatTensor(t_negativeComments)
 testData = torch.cat((t_postiveComments,t_negativeComments))
 testDataAns = torch.cat((t_postiveAns,t_negativeAns))
 
-lr = 0.03
+lr = 0.009
 min_lr = 0.001
 def adjust_learning_rate(optimizer, epoch):
     """
     調整學習率
     """
     global lr
-    if epoch % 30 == 0 and epoch != 0:
-        lr = lr * 0.9
+    if epoch % 10 == 0 and epoch != 0:
+        lr = lr * 0.65
         if(lr < min_lr):
             lr = min_lr
         for param_group in optimizer.param_groups:
@@ -71,13 +71,16 @@ def adjust_learning_rate(optimizer, epoch):
     
 
 if __name__ == "__main__":
+    EARLY_STOP_LOSS = 0.35
+    EPOCH = 100
+
     net = JWP(200,150,100,1) 
     print(net)
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     loss_func = torch.nn.BCEWithLogitsLoss()
 
-    for t in range(70):
+    for t in range(EPOCH):
         adjust_learning_rate(optimizer,t)
 
         """
@@ -120,6 +123,10 @@ if __name__ == "__main__":
             "test_acc:",round(np.mean(t_outAsAns == testDataAns.numpy()),3),
             "LR:",lr
         )
+
+        if(t_loss <= EARLY_STOP_LOSS):
+            print("Early stop")
+            break
     
     torch.save(net, 'torchmodel/pytorch_bce.model')
     print('model save')
