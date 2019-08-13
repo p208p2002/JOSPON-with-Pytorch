@@ -5,8 +5,6 @@ Judge of sentence positive or negative with PyTorch
 
 [資料集來源(賣外評論資料)](https://github.com/SophonPlus/ChineseNlpCorpus)
 
-[資料集備份與預訓練模型](https://github.com/p208p2002/JOSPON-with-Pytorch/releases)
-
 # 模型定義
 - 包含兩個隱藏層
 - hidden、hidden2 使用 `relu`
@@ -41,6 +39,7 @@ Judge of sentence positive or negative with PyTorch
 5. 測試
     - 使用檔案:`demo.py`
 
+> [維基資料集與預訓練模型下載](https://github.com/p208p2002/JOSPON-with-Pytorch/releases)
 # 結果
 ## 訓練結果
 ```
