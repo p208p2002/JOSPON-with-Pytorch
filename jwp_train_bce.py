@@ -80,7 +80,7 @@ if __name__ == "__main__":
     EARLY_STOP_LOSS = 0.35
     EPOCH = 100
 
-    net = JWP(200,150,100,1) 
+    net = JWP(200,150,100,1)
     print(net)
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
