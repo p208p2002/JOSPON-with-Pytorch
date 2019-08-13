@@ -43,12 +43,7 @@ Judge of sentence positive or negative with PyTorch
 # 結果
 ## 訓練結果
 ```
-.
-.
-.
-epoch: 298 loss: 0.556 train_acc: 0.879 test_acc: 0.827 LR: 0.007748409780000004
-epoch: 299 loss: 0.556 train_acc: 0.879 test_acc: 0.827 LR: 0.007748409780000004
-epoch: 300 loss: 0.556 train_acc: 0.879 test_acc: 0.828 LR: 0.007748409780000004
+epoch: 70 train_loss: 0.338 train_acc: 0.85 test_loss: 0.445 test_acc: 0.822 LR: 0.032400000000000005
 ```
 ## 測試結果
 ```
