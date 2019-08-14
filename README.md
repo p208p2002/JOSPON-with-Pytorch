@@ -1,7 +1,6 @@
 # JOSPON-with-Pytorch
 Judge of sentence positive or negative with PyTorch
 句子正負面情緒判斷類神經網路模型，使用PyTorch
-> PyTorch練習小專案
 
 [資料集來源(賣外評論資料)](https://github.com/SophonPlus/ChineseNlpCorpus)
 
