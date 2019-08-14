@@ -94,7 +94,7 @@ def compute_accuracy(y_pred, y_target):
     
 
 if __name__ == "__main__":
-    EPOCH = 100
+    EPOCH = 50
     net = JWP(200,150,100,1)
     print(net)
 
@@ -102,32 +102,37 @@ if __name__ == "__main__":
     loss_func = torch.nn.BCEWithLogitsLoss()
 
     for t in range(EPOCH):
+        """
+        動態調整學習率
+        """
         adjust_learning_rate(optimizer,t)
+
+        """
+        Train phase
+        """
+        net.train() # 訓練模式        
         TrainAcc = 0.0
         TrainLoss = 0.0
         for step,(batchData, batchTarget) in enumerate(trainDataLoader):
-            """
-            Train phase
-            """
-            net.train()
-            optimizer.zero_grad()
+            optimizer.zero_grad() # 梯度歸零
             out = net(batchData)
-            trainAcc = compute_accuracy(out,batchTarget.long())
+            trainAcc = compute_accuracy(out,batchTarget.long()) # 取得正確率
             TrainAcc = TrainAcc + trainAcc
-            loss = loss_func(out,batchTarget)
+            loss = loss_func(out,batchTarget) # loss 計算
             TrainLoss = TrainLoss + loss
-            loss.backward()
-            optimizer.step()
-        TrainLoss = TrainLoss / (step+1)
-        TrainAcc = TrainAcc / (step+1)
-        
+            loss.backward() # 反向傳播
+            optimizer.step() # 更新權重
+        TrainLoss = TrainLoss / (step+1) # epoch loss
+        TrainAcc = TrainAcc / (step+1) # epoch acc
+
+
+        """
+        Eval phase
+        """
+        net.eval()
         TestAcc = 0.0
         TestLoss = 0.0
-        for step,(t_batchData, t_batchTarget) in enumerate(trainDataLoader):
-            """
-            Eval phase
-            """
-            net.eval()
+        for step,(t_batchData, t_batchTarget) in enumerate(trainDataLoader):            
             t_out = net(t_batchData)
             testAcc = compute_accuracy(t_out,t_batchTarget.long())
             TestAcc = TestAcc + testAcc
