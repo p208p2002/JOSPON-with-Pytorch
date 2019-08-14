@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.utils.data as Data
 from argparse import Namespace
 import numpy as np
 import pickle
@@ -31,6 +32,14 @@ negativeComments = torch.FloatTensor(negativeComments)
 
 trainData = torch.cat((postiveComments,negativeComments))
 trainDataAns = torch.cat((postiveAns,negativeAns))
+trainDataSet = Data.TensorDataset(trainData, trainDataAns)
+
+trainDataLoader = Data.DataLoader(
+    dataset = trainDataSet,
+    batch_size = 200,
+    shuffle = True,
+    num_workers = 4
+)
 
 """
 測試資料 1K
@@ -54,6 +63,14 @@ t_negativeComments = torch.FloatTensor(t_negativeComments)
 
 testData = torch.cat((t_postiveComments,t_negativeComments))
 testDataAns = torch.cat((t_postiveAns,t_negativeAns))
+testDataSet = Data.TensorDataset(testData, testDataAns)
+
+testDataLoader = Data.DataLoader(
+    dataset = testDataSet,
+    batch_size = 200,
+    shuffle = True,
+    num_workers = 4
+)
 
 lr = 0.009
 min_lr = 0.001
@@ -87,34 +104,27 @@ if __name__ == "__main__":
     loss_func = torch.nn.BCEWithLogitsLoss()
 
     for t in range(EPOCH):
-        adjust_learning_rate(optimizer,t)
-
-        """
-        打亂資料
-        """
-        torch.manual_seed(t)
-        trainData=trainData[torch.randperm(trainData.size()[0])]
-        torch.manual_seed(t)
-        trainDataAns=trainDataAns[torch.randperm(trainDataAns.size()[0])]
+        adjust_learning_rate(optimizer,t)        
+        for step,(batchData, batchTarget) in enumerate(trainDataLoader):
+            """
+            Train phase
+            """
+            net.train()
+            optimizer.zero_grad()
+            out = net(batchData)
+            trainAcc = compute_accuracy(batchData,batchTarget.long())
+            loss = loss_func(out,batchTarget)                
+            loss.backward()
+            optimizer.step()
         
-        """
-        Train phase
-        """
-        net.train()
-        optimizer.zero_grad()
-        out = net(trainData)
-        trainAcc = compute_accuracy(out,trainDataAns.long())
-        loss = loss_func(out,trainDataAns)        
-        loss.backward()
-        optimizer.step()
-
-        """
-        Eval phase
-        """
-        net.eval()
-        t_out = net(testData)
-        testAcc = compute_accuracy(t_out,testDataAns.long())
-        t_loss = loss_func(t_out,testDataAns)
+        for step,(t_batchData, t_batchTarget) in enumerate(trainDataLoader):
+            """
+            Eval phase
+            """
+            net.eval()
+            t_out = net(t_batchData)
+            testAcc = compute_accuracy(t_out,t_batchTarget.long())
+            t_loss = loss_func(t_out,t_batchTarget)
         
         """
         Result
@@ -128,9 +138,9 @@ if __name__ == "__main__":
             "LR:",lr
         )
 
-        if(t_loss <= EARLY_STOP_LOSS):
-            print("Early stop")
-            break
+        # if(t_loss <= EARLY_STOP_LOSS):
+        #     print("Early stop")
+        #     break
     
     torch.save(net, 'torchmodel/pytorch_bce.model')
     print('model save')
