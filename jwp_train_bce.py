@@ -6,8 +6,19 @@ from argparse import Namespace
 import numpy as np
 import pickle
 from JWP import JWP
+from argparse import Namespace
 
-with open('dataset/waimai_10k_tw.pkl','rb') as f:
+args = Namespace(
+    dataset_file = 'dataset/waimai_10k_tw.pkl',
+    model_save_path='torchmodel/pytorch_bce.model',
+    # Training hyper parameters
+    batch_size = 200,
+    learning_rate = 0.009,
+    min_learning_rate = 0.001,
+    num_epochs=50,
+)
+
+with open(args.dataset_file,'rb') as f:
     waimai10k = pickle.load(f)
 
 """
@@ -36,7 +47,7 @@ trainDataSet = Data.TensorDataset(trainData, trainDataAns)
 
 trainDataLoader = Data.DataLoader(
     dataset = trainDataSet,
-    batch_size = 200,
+    batch_size = args.batch_size,
     shuffle = True,
     num_workers = 4
 )
@@ -67,13 +78,13 @@ testDataSet = Data.TensorDataset(testData, testDataAns)
 
 testDataLoader = Data.DataLoader(
     dataset = testDataSet,
-    batch_size = 200,
+    batch_size = args.batch_size,
     shuffle = True,
     num_workers = 4
 )
 
-lr = 0.009
-min_lr = 0.001
+lr = args.learning_rate
+min_lr = args.min_learning_rate
 def adjust_learning_rate(optimizer, epoch):
     """
     調整學習率
@@ -87,6 +98,9 @@ def adjust_learning_rate(optimizer, epoch):
             param_group['lr'] = lr
 
 def compute_accuracy(y_pred, y_target):
+    """
+    計算正確率
+    """
     y_target = y_target.cpu()
     y_pred_indices = (torch.sigmoid(y_pred)>0.5).cpu().long()#.max(dim=1)[1]
     n_correct = torch.eq(y_pred_indices, y_target).sum().item()
@@ -94,7 +108,7 @@ def compute_accuracy(y_pred, y_target):
     
 
 if __name__ == "__main__":
-    EPOCH = 50
+    EPOCH = args.num_epochs
     net = JWP(200,150,100,1)
     print(net)
 
@@ -113,6 +127,7 @@ if __name__ == "__main__":
         net.train() # 訓練模式        
         TrainAcc = 0.0
         TrainLoss = 0.0
+        # Train batch
         for step,(batchData, batchTarget) in enumerate(trainDataLoader):
             optimizer.zero_grad() # 梯度歸零
             out = net(batchData)
@@ -125,13 +140,13 @@ if __name__ == "__main__":
         TrainLoss = TrainLoss / (step+1) # epoch loss
         TrainAcc = TrainAcc / (step+1) # epoch acc
 
-
         """
         Eval phase
         """
         net.eval()
         TestAcc = 0.0
         TestLoss = 0.0
+        # Eval batch
         for step,(t_batchData, t_batchTarget) in enumerate(trainDataLoader):            
             t_out = net(t_batchData)
             testAcc = compute_accuracy(t_out,t_batchTarget.long())
@@ -153,5 +168,5 @@ if __name__ == "__main__":
             "LR:",lr
         )
     
-    torch.save(net, 'torchmodel/pytorch_bce.model')
+    torch.save(net, args.model_save_path)
     print('model save')
